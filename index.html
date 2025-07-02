@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,7 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
   </head>
-  <body>
+  <body class="container">
+
+    <header>
+      <img class="m-auto" src="/src/assets/snake.jpg" alt="" />
+    </header>
+
+    <main class="flex flex-col items-center gap-6 my-6">
+      <button class="cursor-pointer py-4 bg-amber-300 w-56">Hrát</button>
+      <button class="cursor-pointer py-4 bg-amber-300 w-56">Nastavení</button>
+    </main>
+
+    <footer></footer>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
