@@ -1,4 +1,5 @@
 import "./style.css";
-import { mainMenuBackgroundMusic } from "./BgMusic";
+import { menuBgMusic, hoverSoundEffect } from "./index";
 
-mainMenuBackgroundMusic();
+menuBgMusic();
+hoverSoundEffect();

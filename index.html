@@ -11,12 +11,15 @@
       <img class="m-auto" src="/src/assets/snake.jpg" alt="" />
     </header>
 
-    <main class="flex flex-col items-center gap-6 my-6 relative">
+    <main
+      id="btnContainer"
+      class="flex flex-col items-center gap-6 my-6 relative"
+    >
       <button class="cursor-pointer py-4 bg-amber-300 w-56">Hrát</button>
 
       <button class="cursor-pointer py-4 bg-amber-300 w-56">Nastavení</button>
 
-      <button class="cursor-pointer py-2 bg-amber-300 w-11" id="soundIcon">
+      <button id="soundBTN" class="cursor-pointer py-2 bg-amber-300 w-11">
         <!-- https://www.svgrepo.com -->
         <svg
           id="soundOffIcon"
@@ -66,15 +69,6 @@
     </main>
 
     <footer></footer>
-
-    <!-- Background Music -->
-    <audio
-      id="bgMusic"
-      autoplay
-      loop
-      src="./src/assets/MenuBgMusic.mp3"
-    ></audio>
-    <!--------------------------->
 
     <script type="module" src="/src/main.ts"></script>
   </body>
