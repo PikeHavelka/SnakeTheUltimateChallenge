@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
 * {
-    /* outline: 1px solid red; */
+  /* outline: 1px solid red; */
+}
+
+.animate-page-slide-down {
+    animation: pageSlideDown 500ms ease-in-out forwards;
+}
+
+@layer utilities {
+  @keyframes pageSlideDown {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(300%);
+    }
+  }
 }
