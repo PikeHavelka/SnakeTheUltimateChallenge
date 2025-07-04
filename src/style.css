@@ -8,6 +8,11 @@
     animation: pageSlideDown 500ms ease-in-out forwards;
 }
 
+.animate-page-slide-from-top {
+    animation: pageSlideFromTop 500ms ease-in-out forwards;
+}
+
+
 @layer utilities {
   @keyframes pageSlideDown {
     from {
@@ -16,6 +21,16 @@
 
     to {
       transform: translateY(300%);
+    }
+  }
+
+  @keyframes pageSlideFromTop {
+    from {
+        transform: translateY(-300%);
+    }
+
+    to {
+        transform: translateY(0);
     }
   }
 }
