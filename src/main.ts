@@ -1,45 +1,65 @@
 import "./style.css";
-import { menuBgMusic, hoverSoundEffect } from "./index";
+import {
+  menuBgMusic,
+  hoverSoundEffect,
+  pageTransition,
+  countDown,
+} from "./MainMenu/index";
 
 menuBgMusic();
 hoverSoundEffect();
+// pageTransition();
+// countDown();
 
+// playground area (NORMAL)
+const canvas = (document.getElementById("canvas") as HTMLCanvasElement) || null;
+const ctx = canvas.getContext("2d");
 
+canvas.width = 300;
+canvas.height = 300;
+let playerSize = 20;
 
-
-// přechod stránky po kliknutí na play
-const playBTN = document.getElementById("playbtn") as HTMLAnchorElement | null;
-
-if (playBTN) {
-    playBTN.addEventListener("click", (e: MouseEvent) => {
-        e.preventDefault();
-        document.body.classList.toggle("animate-page-slide-down");
-        
-        setTimeout(() => {
-            window.location.href = "./src/play.html";
-        }, 500);
-    });
-};
-
-
-// odpočet
-const modalStartGame = document.getElementById("modalStartGame") as HTMLDialogElement | null;
-
-if(modalStartGame){
-    let countdown = 3; // Initial value for start game.
-
-    setTimeout(() => {
-        modalStartGame.textContent = countdown.toString();
-        modalStartGame.showModal();
-
-        const intervalID = setInterval(() => {
-            countdown--;
-            modalStartGame.textContent = countdown.toString();
+// Background grid, just for testing the game. Press G for show/hide grid.
+const developerPurposes = () => {
+    let showGrid = true;
     
-            if(countdown < 0){
-                clearInterval(intervalID);
-                modalStartGame.close();
-            };
-        }, 1000);
-    }, 500);
-};
+    document.addEventListener("keydown", (e) => {
+      console.log(e.key, showGrid);
+      if (e.key === "g") {showGrid = !showGrid;
+        bgGrid();
+      }
+    });
+    
+    const bgGrid = () => {
+      if (ctx) {
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    
+        ctx.fillStyle = "lime";
+        ctx.fillRect(0, 0, 20, 20);
+    
+        if (showGrid) {
+          //vertical line
+          for (let i = 0; i <= canvas.width; i += playerSize) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, canvas.height);
+            ctx.strokeStyle = "#ddd";
+            ctx.stroke();
+          }
+    
+          //horizontal line
+          for (let i = 0; i <= canvas.height; i += playerSize) {
+            ctx.beginPath();
+            ctx.moveTo(0, i);
+            ctx.lineTo(canvas.width, i);
+            ctx.strokeStyle = "#ddd";
+            ctx.stroke();
+          }
+        }
+      }
+    };
+    
+    bgGrid();
+}
+developerPurposes();
+/************************************************/
