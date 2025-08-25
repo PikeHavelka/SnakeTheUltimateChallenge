@@ -25,20 +25,10 @@ const config = {
   playerColor: "lime",
   playerName: "",
   gameSpeed: 110,
+  showGrid: false
 };
 
-let showGrid = false;
-
-document.addEventListener("keydown", (e) => {
-  if(e.key === "g") {
-    showGrid = !showGrid;
-
-    if(showGrid) game.drawGrid();
-    else config.ctx.clearRect(0, 0, config.canvasWidth, config.canvasWidth);
-  }
-});
-
-class Game {
+class snakeTheUltimateChallenge {
   ctx: CanvasRenderingContext2D;
   canvasWidth: number;
   canvasHeight: number;
@@ -46,15 +36,31 @@ class Game {
   playerColor: string;
   playerName: string;
   gameSpeed: number;
+  showGrid: boolean;
 
   constructor(config: GameConfig) {
-    this.ctx = config.ctx,
-    this.canvasWidth = config.canvasWidth,
-    this.canvasHeight = config.canvasHeight,
-    this.playerSize = config.playerSize,
-    this.playerColor = config.playerColor,
-    this.playerName = config.playerName,
-    this.gameSpeed = config.gameSpeed
+    (this.ctx = config.ctx),
+      (this.canvasWidth = config.canvasWidth),
+      (this.canvasHeight = config.canvasHeight),
+      (this.playerSize = config.playerSize),
+      (this.playerColor = config.playerColor),
+      (this.playerName = config.playerName),
+      (this.gameSpeed = config.gameSpeed),
+      (this.showGrid = config.showGrid)
+  }
+
+  // Show Grid Methods
+  initControls() {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "g") this.toggleGrid();
+    });
+  }
+  
+  toggleGrid() {
+    this.showGrid = !this.showGrid;
+
+    if (this.showGrid) this.drawGrid();
+    else this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasWidth);
   }
 
   drawGrid() {
@@ -74,6 +80,8 @@ class Game {
       this.ctx.stroke();
     }
   }
+  /************************************/
 }
 
-const game = new Game(config);
+const snakeGame = new snakeTheUltimateChallenge(config);
+snakeGame.initControls(); //Show Grid

@@ -5,5 +5,6 @@ export type GameConfig = {
   playerSize: number,
   playerColor: string,
   playerName: string,
-  gameSpeed: number
+  gameSpeed: number,
+  showGrid: boolean
 }
