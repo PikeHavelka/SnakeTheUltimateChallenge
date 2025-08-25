@@ -27,6 +27,17 @@ const config = {
   gameSpeed: 110,
 };
 
+let showGrid = false;
+
+document.addEventListener("keydown", (e) => {
+  if(e.key === "g") {
+    showGrid = !showGrid;
+
+    if(showGrid) game.drawGrid();
+    else config.ctx.clearRect(0, 0, config.canvasWidth, config.canvasWidth);
+  }
+});
+
 class Game {
   ctx: CanvasRenderingContext2D;
   canvasWidth: number;
@@ -37,13 +48,13 @@ class Game {
   gameSpeed: number;
 
   constructor(config: GameConfig) {
-    (this.ctx = config.ctx),
-      (this.canvasWidth = config.canvasWidth),
-      (this.canvasHeight = config.canvasHeight),
-      (this.playerSize = config.playerSize),
-      (this.playerColor = config.playerColor),
-      (this.playerName = config.playerName),
-      (this.gameSpeed = config.gameSpeed);
+    this.ctx = config.ctx,
+    this.canvasWidth = config.canvasWidth,
+    this.canvasHeight = config.canvasHeight,
+    this.playerSize = config.playerSize,
+    this.playerColor = config.playerColor,
+    this.playerName = config.playerName,
+    this.gameSpeed = config.gameSpeed
   }
 
   drawGrid() {
@@ -66,4 +77,3 @@ class Game {
 }
 
 const game = new Game(config);
-game.drawGrid();
