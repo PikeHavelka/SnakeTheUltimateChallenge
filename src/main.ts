@@ -1,3 +1,4 @@
+"use strict";
 import "./style.css";
 import {
   menuBgMusic,
@@ -5,28 +6,7 @@ import {
   pageTransition,
   countDown,
 } from "./MainMenu/index";
-import { PlayerMoves } from "./TheGame/index";
-import type { GeneralProperty } from "./types.ts";
-
-// Global declarations
-const canvas = (document.getElementById("canvas") as HTMLCanvasElement) || null;
-
-const generalProperty: GeneralProperty = {
-  canvasWidth: (canvas.width = 300),
-  canvasHeight: (canvas.height = 300),
-  playerSize: 20,
-  ctx: canvas.getContext("2d"),
-  showGrid: false
-};
-/**********************************************/
-
-// Listener for show/hide grid
-document.addEventListener("keydown", (e) => {
-  console.log(e.key, generalProperty.showGrid);
-  
-  if (e.key === "g") generalProperty.showGrid = !generalProperty.showGrid;
-});
-/**********************************************/
+import type { GameConfig } from "./types";
 
 menuBgMusic();
 hoverSoundEffect();
@@ -35,4 +15,55 @@ hoverSoundEffect();
 // pageTransition();
 // countDown();
 
-PlayerMoves(generalProperty);
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+
+const config = {
+  ctx: canvas.getContext("2d") as CanvasRenderingContext2D,
+  canvasWidth: (canvas.width = 300),
+  canvasHeight: (canvas.height = 300),
+  playerSize: 20,
+  playerColor: "lime",
+  playerName: "",
+  gameSpeed: 110,
+};
+
+class Game {
+  ctx: CanvasRenderingContext2D;
+  canvasWidth: number;
+  canvasHeight: number;
+  playerSize: number;
+  playerColor: string;
+  playerName: string;
+  gameSpeed: number;
+
+  constructor(config: GameConfig) {
+    (this.ctx = config.ctx),
+      (this.canvasWidth = config.canvasWidth),
+      (this.canvasHeight = config.canvasHeight),
+      (this.playerSize = config.playerSize),
+      (this.playerColor = config.playerColor),
+      (this.playerName = config.playerName),
+      (this.gameSpeed = config.gameSpeed);
+  }
+
+  drawGrid() {
+    // Vertical lines
+    for (let i = this.playerSize; i < this.canvasWidth; i += this.playerSize) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(i, 0);
+      this.ctx.lineTo(i, this.canvasHeight);
+      this.ctx.stroke();
+    }
+
+    // Horizontal lines
+    for (let i = this.playerSize; i < this.canvasHeight; i += this.playerSize) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, i);
+      this.ctx.lineTo(this.canvasWidth, i);
+      this.ctx.stroke();
+    }
+  }
+}
+
+const game = new Game(config);
+game.drawGrid();

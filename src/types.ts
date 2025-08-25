@@ -1,7 +1,9 @@
-export type GeneralProperty = {
+export type GameConfig = {
+  ctx: CanvasRenderingContext2D,
   canvasWidth: number,
   canvasHeight: number,
   playerSize: number,
-  ctx: CanvasRenderingContext2D | null,
-  showGrid: boolean
+  playerColor: string,
+  playerName: string,
+  gameSpeed: number
 }
