@@ -13,4 +13,5 @@ export type GameConfig = {
   directionX: number;
   directionY: number;
   lastKey: string;
+  directionLock: boolean;
 };

@@ -32,6 +32,7 @@ const config = {
   directionX: 20,
   directionY: 0,
   lastKey: "",
+  directionLock: true,
 };
 
 const moves = {
@@ -56,6 +57,7 @@ class snakeTheUltimateChallenge {
   directionX: number;
   directionY: number;
   lastKey: string;
+  directionLock: boolean;
 
   constructor(config: GameConfig) {
     (this.ctx = config.ctx),
@@ -72,6 +74,7 @@ class snakeTheUltimateChallenge {
       (this.directionX = config.directionX),
       (this.directionY = config.directionY),
       (this.lastKey = config.lastKey);
+    this.directionLock = config.directionLock;
   }
 
   // Event Listeners
@@ -82,10 +85,10 @@ class snakeTheUltimateChallenge {
 
     document.addEventListener("keydown", (e) => {
       if (
-        moves.up.includes(e.key) ||
-        moves.right.includes(e.key) ||
-        moves.down.includes(e.key) ||
-        moves.left.includes(e.key)
+        (moves.up.includes(e.key) ||
+          moves.right.includes(e.key) ||
+          moves.down.includes(e.key) ||
+          moves.left.includes(e.key)) && this.directionLock
       ) {
         this.playerDirection(e.key);
       }
@@ -138,6 +141,7 @@ class snakeTheUltimateChallenge {
       this.directionY = -this.playerSize;
       this.directionX = 0;
       this.lastKey = key;
+      this.directionLock= false;
     } else if (
       moves.right.includes(key) &&
       !moves.left.includes(this.lastKey)
@@ -145,10 +149,12 @@ class snakeTheUltimateChallenge {
       this.directionX = this.playerSize;
       this.directionY = 0;
       this.lastKey = key;
+      this.directionLock = false;
     } else if (moves.down.includes(key) && !moves.up.includes(this.lastKey)) {
       this.directionY = this.playerSize;
       this.directionX = 0;
       this.lastKey = key;
+      this.directionLock = false;
     } else if (
       moves.left.includes(key) &&
       !moves.right.includes(this.lastKey)
@@ -156,6 +162,7 @@ class snakeTheUltimateChallenge {
       this.directionX = -this.playerSize;
       this.directionY = 0;
       this.lastKey = key;
+      this.directionLock = false;
     }
   }
 
@@ -172,6 +179,8 @@ class snakeTheUltimateChallenge {
         this.playerY += this.directionY;
 
         this.drawPlayer();
+
+        this.directionLock = true;
         lastTime = timestamp;
       }
       requestAnimationFrame(snakeGameLoop);
@@ -180,10 +189,12 @@ class snakeTheUltimateChallenge {
     requestAnimationFrame(snakeGameLoop);
   }
 
+  // Clearing playing pool
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
   }
 
+  // Player draw
   drawPlayer() {
     this.ctx.fillStyle = this.playerColor;
     this.ctx.fillRect(
