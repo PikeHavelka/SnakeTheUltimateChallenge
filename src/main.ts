@@ -19,13 +19,25 @@ const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
 const config = {
   ctx: canvas.getContext("2d") as CanvasRenderingContext2D,
-  canvasWidth: (canvas.width = 300),
-  canvasHeight: (canvas.height = 300),
+  canvasWidth: (canvas.width = 300), // v menu nastavit aby šli vybrat pouze lichá čísla
+  canvasHeight: (canvas.height = 300), // v menu nastavit aby šli vybrat pouze lichá čísla
   playerSize: 20,
   playerColor: "lime",
   playerName: "",
   gameSpeed: 110,
-  showGrid: false
+  showGrid: true,
+  playerX: 0,
+  playerY: 0,
+  speed: 200,
+  directionX: 20,
+  directionY: 0
+};
+
+const moves = {
+  top: ["w", "ArrowUp"],
+  right: ["d", "ArrowRight"],
+  down: ["s", "ArrowDown"],
+  left: ["a", "ArrowLeft"],
 };
 
 class snakeTheUltimateChallenge {
@@ -37,6 +49,11 @@ class snakeTheUltimateChallenge {
   playerName: string;
   gameSpeed: number;
   showGrid: boolean;
+  playerX: number;
+  playerY: number;
+  speed: number;
+  directionX: number;
+  directionY: number;
 
   constructor(config: GameConfig) {
     (this.ctx = config.ctx),
@@ -46,21 +63,33 @@ class snakeTheUltimateChallenge {
       (this.playerColor = config.playerColor),
       (this.playerName = config.playerName),
       (this.gameSpeed = config.gameSpeed),
-      (this.showGrid = config.showGrid)
+      (this.showGrid = config.showGrid),
+      (this.playerX = config.playerX),
+      (this.playerY = config.playerY),
+      this.speed = config.speed,
+      this.directionX = config.directionX,
+      this.directionY = config.directionY
   }
 
-  // Show Grid Methods
+  // Event Listeners
   initControls() {
     document.addEventListener("keydown", (e) => {
       if (e.key === "g") this.toggleGrid();
     });
-  }
-  
-  toggleGrid() {
-    this.showGrid = !this.showGrid;
 
+    document.addEventListener("keydown", (e) => {
+      if ((moves.top.includes(e.key)) || (moves.right.includes(e.key)) || (moves.down.includes(e.key)) || (moves.left.includes(e.key))) {
+        this.playerDirection(e.key)
+      }
+    });
+  }
+
+  // Show Grid
+  toggleGrid() {
     if (this.showGrid) this.drawGrid();
     else this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasWidth);
+
+    this.showGrid = !this.showGrid;
   }
 
   drawGrid() {
@@ -80,8 +109,78 @@ class snakeTheUltimateChallenge {
       this.ctx.stroke();
     }
   }
-  /************************************/
+
+  // Always show in center of the square.
+  playerStartPosition() {
+    this.playerX = this.canvasWidth / 2 - this.playerSize / 2;
+    this.playerY = this.canvasHeight / 2 - this.playerSize / 2;
+
+    this.ctx.fillStyle = this.playerColor;
+    this.ctx.fillRect(
+      this.playerX,
+      this.playerY,
+      this.playerSize,
+      this.playerSize
+    );
+  }
+
+  // Player direction changing
+  playerDirection(key: string) {
+    if (moves.top.includes(key)) {
+      this.directionY = -this.playerSize;
+      this.directionX = 0;
+
+    } else if (moves.right.includes(key)) {
+      this.directionX = this.playerSize;
+      this.directionY = 0;
+
+    } else if (moves.down.includes(key)) {
+      this.directionY = this.playerSize;
+      this.directionX = 0;
+
+    } else if (moves.left.includes(key)) {
+      this.directionX = -this.playerSize;
+      this.directionY = 0;
+    }
+  }
+
+  // Game loop
+  gameLoop() {
+    let lastTime = 0;
+
+    const snakeGameLoop = (timestamp: number) => {
+      if (timestamp - lastTime >= this.speed) {
+        this.clearCanvas();
+
+        // Player moves
+        this.playerX += this.directionX
+        this.playerY += this.directionY
+
+        this.drawPlayer();
+        lastTime = timestamp;
+      }
+      requestAnimationFrame(snakeGameLoop);
+    };
+
+    requestAnimationFrame(snakeGameLoop);
+  }
+
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+  }
+
+  drawPlayer() {
+    this.ctx.fillStyle = this.playerColor;
+    this.ctx.fillRect(
+      this.playerX,
+      this.playerY,
+      this.playerSize,
+      this.playerSize
+    );
+  }
 }
 
 const snakeGame = new snakeTheUltimateChallenge(config);
-snakeGame.initControls(); //Show Grid
+snakeGame.initControls();
+snakeGame.playerStartPosition();
+snakeGame.gameLoop();
