@@ -12,4 +12,5 @@ export type GameConfig = {
   speed: number;
   directionX: number;
   directionY: number;
+  lastKey: string;
 };
