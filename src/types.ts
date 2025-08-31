@@ -14,4 +14,5 @@ export type GameConfig = {
   directionY: number;
   lastKey: string;
   directionLock: boolean;
+  foodColor: string;
 };

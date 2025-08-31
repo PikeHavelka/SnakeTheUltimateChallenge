@@ -31,8 +31,9 @@ const config = {
   speed: 200,
   directionX: 20,
   directionY: 0,
-  lastKey: "",
+  lastKey: "d",
   directionLock: true,
+  foodColor: "red",
 };
 
 const moves = {
@@ -58,6 +59,7 @@ class snakeTheUltimateChallenge {
   directionY: number;
   lastKey: string;
   directionLock: boolean;
+  foodColor: string;
 
   constructor(config: GameConfig) {
     (this.ctx = config.ctx),
@@ -75,6 +77,7 @@ class snakeTheUltimateChallenge {
       (this.directionY = config.directionY),
       (this.lastKey = config.lastKey);
     this.directionLock = config.directionLock;
+    this.foodColor = config.foodColor;
   }
 
   // Event Listeners
@@ -88,7 +91,8 @@ class snakeTheUltimateChallenge {
         (moves.up.includes(e.key) ||
           moves.right.includes(e.key) ||
           moves.down.includes(e.key) ||
-          moves.left.includes(e.key)) && this.directionLock
+          moves.left.includes(e.key)) &&
+        this.directionLock
       ) {
         this.playerDirection(e.key);
       }
@@ -141,7 +145,7 @@ class snakeTheUltimateChallenge {
       this.directionY = -this.playerSize;
       this.directionX = 0;
       this.lastKey = key;
-      this.directionLock= false;
+      this.directionLock = false;
     } else if (
       moves.right.includes(key) &&
       !moves.left.includes(this.lastKey)
@@ -179,6 +183,7 @@ class snakeTheUltimateChallenge {
         this.playerY += this.directionY;
 
         this.drawPlayer();
+        this.randomFoodGeneration();
 
         this.directionLock = true;
         lastTime = timestamp;
@@ -203,6 +208,24 @@ class snakeTheUltimateChallenge {
       this.playerSize,
       this.playerSize
     );
+  }
+
+  // Random meal generation
+  randomFoodGeneration() {
+    let foodX =
+      Math.floor(Math.random() * (this.canvasWidth / this.playerSize)) *
+      this.playerSize;
+    let foodY =
+      Math.floor(Math.random() * (this.canvasHeight / this.playerSize)) *
+      this.playerSize;
+
+    this.drawFood(foodX, foodY)
+  }
+
+  // Meal draw
+  drawFood(foodX: number, foodY: number) {
+    this.ctx.fillStyle = this.foodColor;
+    this.ctx.fillRect(foodX, foodY, this.playerSize, this.playerSize);
   }
 }
 
