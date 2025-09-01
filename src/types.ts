@@ -7,12 +7,13 @@ export type GameConfig = {
   playerName: string;
   gameSpeed: number;
   showGrid: boolean;
-  playerX: number;
-  playerY: number;
+  playerPosition: {x: number, y: number}[];
   speed: number;
   directionX: number;
   directionY: number;
   lastKey: string;
   directionLock: boolean;
   foodColor: string;
+  foodX: number;
+  foodY: number;
 };
