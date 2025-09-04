@@ -11,6 +11,7 @@ import type { GameConfig } from "./types";
 menuBgMusic();
 hoverSoundEffect();
 
+//todo - kolize s tělem hada, kolize s krajem pole, generování jídla v hřáci, skóre
 // přidat na spustění intervalu opoždění o 3-4vteřiny
 // pageTransition();
 // countDown();
@@ -26,7 +27,7 @@ const config = {
   playerName: "",
   gameSpeed: 110,
   showGrid: true,
-  playerPosition: [{ x: 100, y: 100 }],
+  playerHead: [{ x: 100, y: 100 }],
   speed: 200,
   directionX: 20,
   directionY: 0,
@@ -35,6 +36,9 @@ const config = {
   foodColor: "red",
   foodX: 0,
   foodY: 0,
+  animationFrameID: 0,
+  lastTime: 0,
+  isGameOver: false
 };
 
 const moves = {
@@ -53,7 +57,7 @@ class snakeTheUltimateChallenge {
   playerName: string;
   gameSpeed: number;
   showGrid: boolean;
-  playerPosition: { x: number; y: number }[];
+  playerHead: { x: number; y: number }[];
   speed: number;
   directionX: number;
   directionY: number;
@@ -62,25 +66,31 @@ class snakeTheUltimateChallenge {
   foodColor: string;
   foodX: number;
   foodY: number;
+  animationFrameID: number;
+  lastTime: number;
+  isGameOver: boolean;
 
   constructor(config: GameConfig) {
     (this.ctx = config.ctx),
-    (this.canvasWidth = config.canvasWidth),
-    (this.canvasHeight = config.canvasHeight),
-    (this.playerSize = config.playerSize),
-    (this.playerColor = config.playerColor),
-    (this.playerName = config.playerName),
-    (this.gameSpeed = config.gameSpeed),
-    (this.showGrid = config.showGrid),
-    (this.playerPosition = config.playerPosition),
-    (this.speed = config.speed),
-    (this.directionX = config.directionX),
-    (this.directionY = config.directionY),
-    (this.lastKey = config.lastKey);
-    (this.directionLock = config.directionLock);
-    (this.foodColor = config.foodColor);
-    (this.foodX = config.foodX);
-    (this.foodY = config.foodY);
+      (this.canvasWidth = config.canvasWidth),
+      (this.canvasHeight = config.canvasHeight),
+      (this.playerSize = config.playerSize),
+      (this.playerColor = config.playerColor),
+      (this.playerName = config.playerName),
+      (this.gameSpeed = config.gameSpeed),
+      (this.showGrid = config.showGrid),
+      (this.playerHead = config.playerHead),
+      (this.speed = config.speed),
+      (this.directionX = config.directionX),
+      (this.directionY = config.directionY),
+      (this.lastKey = config.lastKey);
+    this.directionLock = config.directionLock;
+    this.foodColor = config.foodColor;
+    this.foodX = config.foodX;
+    this.foodY = config.foodY;
+    this.animationFrameID = config.animationFrameID;
+    this.lastTime = config.lastTime;
+    this.isGameOver = config.isGameOver;
   }
 
   // Event Listeners
@@ -130,8 +140,9 @@ class snakeTheUltimateChallenge {
 
   // Always show player in the center of the square. Minus player size for better starting.
   playerStartPosition() {
-    this.playerPosition[0].x = (this.canvasWidth / 2 - this.playerSize / 2) - this.playerSize;
-    this.playerPosition[0].y = this.canvasHeight / 2 - this.playerSize / 2;
+    this.playerHead[0].x =
+      this.canvasWidth / 2 - this.playerSize / 2 - this.playerSize;
+    this.playerHead[0].y = this.canvasHeight / 2 - this.playerSize / 2;
   }
 
   // Player direction, wasd and arrows keybinds.
@@ -174,10 +185,10 @@ class snakeTheUltimateChallenge {
   drawPlayer() {
     this.ctx.fillStyle = this.playerColor;
 
-    for (let i = 0; i < this.playerPosition.length; i++) {
+    for (let i = 0; i < this.playerHead.length; i++) {
       this.ctx.fillRect(
-        this.playerPosition[i].x,
-        this.playerPosition[i].y,
+        this.playerHead[i].x,
+        this.playerHead[i].y,
         this.playerSize,
         this.playerSize
       );
@@ -198,12 +209,12 @@ class snakeTheUltimateChallenge {
   // What will happen, when you eat a food or not.
   whenEatOrNot() {
     if (
-      this.playerPosition[0].x === this.foodX &&
-      this.playerPosition[0].y === this.foodY
+      this.playerHead[0].x === this.foodX &&
+      this.playerHead[0].y === this.foodY
     ) {
       this.randomFoodGeneration();
     } else {
-      this.playerPosition.pop();
+      this.playerHead.pop();
     }
 
     this.drawFood();
@@ -218,31 +229,41 @@ class snakeTheUltimateChallenge {
   // Creating body of the snake.
   playerMove() {
     let snakeBody = {
-      x: this.playerPosition[0].x + this.directionX,
-      y: this.playerPosition[0].y + this.directionY,
+      x: this.playerHead[0].x + this.directionX,
+      y: this.playerHead[0].y + this.directionY,
     };
 
-    this.playerPosition.unshift({ x: snakeBody.x, y: snakeBody.y });
+    this.playerHead.unshift({ x: snakeBody.x, y: snakeBody.y });
+  }
+
+  stopGame() {
+    this.isGameOver = true;
+    cancelAnimationFrame(this.animationFrameID);
+  }
+
+  wallCollision() {
+    if(this.playerHead[0].x === this.canvasWidth || this.playerHead[0].y === this.canvasHeight || this.playerHead[0].x < 0 || this.playerHead[0].y < 0 ) {
+      this.stopGame()
+    }
   }
 
   // Game loop
   gameLoop() {
-    let lastTime = 0;
-
     const snakeGameLoop = (timestamp: number) => {
-      if (timestamp - lastTime >= this.speed) {
+      if (timestamp - this.lastTime >= this.speed) {
         this.clearCanvas();
         this.playerMove();
         this.whenEatOrNot();
         this.drawPlayer();
+        this.wallCollision();
+        console.log(this.isGameOver);
         
         this.directionLock = true;
-        lastTime = timestamp;
+        this.lastTime = timestamp;
       }
-      requestAnimationFrame(snakeGameLoop);
+      if(!this.isGameOver) this.animationFrameID = requestAnimationFrame(snakeGameLoop);
     };
-
-    requestAnimationFrame(snakeGameLoop);
+    this.animationFrameID = requestAnimationFrame(snakeGameLoop);
   }
 }
 

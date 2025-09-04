@@ -7,7 +7,7 @@ export type GameConfig = {
   playerName: string;
   gameSpeed: number;
   showGrid: boolean;
-  playerPosition: {x: number, y: number}[];
+  playerHead: {x: number, y: number}[];
   speed: number;
   directionX: number;
   directionY: number;
@@ -16,4 +16,7 @@ export type GameConfig = {
   foodColor: string;
   foodX: number;
   foodY: number;
+  animationFrameID: number;
+  lastTime: number;
+  isGameOver: boolean;
 };
