@@ -16,7 +16,7 @@ hoverSoundEffect();
 // countDown();
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-let gg = { x: 0, y: 0 };
+
 const config = {
   ctx: canvas.getContext("2d") as CanvasRenderingContext2D,
   canvasWidth: (canvas.width = 300), // v menu nastavit aby šli vybrat pouze lichá čísla
@@ -65,22 +65,22 @@ class snakeTheUltimateChallenge {
 
   constructor(config: GameConfig) {
     (this.ctx = config.ctx),
-      (this.canvasWidth = config.canvasWidth),
-      (this.canvasHeight = config.canvasHeight),
-      (this.playerSize = config.playerSize),
-      (this.playerColor = config.playerColor),
-      (this.playerName = config.playerName),
-      (this.gameSpeed = config.gameSpeed),
-      (this.showGrid = config.showGrid),
-      (this.playerPosition = config.playerPosition),
-      (this.speed = config.speed),
-      (this.directionX = config.directionX),
-      (this.directionY = config.directionY),
-      (this.lastKey = config.lastKey);
-    this.directionLock = config.directionLock;
-    this.foodColor = config.foodColor;
-    this.foodX = config.foodX;
-    this.foodY = config.foodY;
+    (this.canvasWidth = config.canvasWidth),
+    (this.canvasHeight = config.canvasHeight),
+    (this.playerSize = config.playerSize),
+    (this.playerColor = config.playerColor),
+    (this.playerName = config.playerName),
+    (this.gameSpeed = config.gameSpeed),
+    (this.showGrid = config.showGrid),
+    (this.playerPosition = config.playerPosition),
+    (this.speed = config.speed),
+    (this.directionX = config.directionX),
+    (this.directionY = config.directionY),
+    (this.lastKey = config.lastKey);
+    (this.directionLock = config.directionLock);
+    (this.foodColor = config.foodColor);
+    (this.foodX = config.foodX);
+    (this.foodY = config.foodY);
   }
 
   // Event Listeners
@@ -128,18 +128,10 @@ class snakeTheUltimateChallenge {
     }
   }
 
-  // Always show player in the center of the square.
+  // Always show player in the center of the square. Minus player size for better starting
   playerStartPosition() {
-    this.playerPosition[0].x = this.canvasWidth / 2 - this.playerSize / 2;
+    this.playerPosition[0].x = (this.canvasWidth / 2 - this.playerSize / 2) - this.playerSize;
     this.playerPosition[0].y = this.canvasHeight / 2 - this.playerSize / 2;
-
-    this.ctx.fillStyle = this.playerColor;
-    this.ctx.fillRect(
-      this.playerPosition[0].x,
-      this.playerPosition[0].y,
-      this.playerSize,
-      this.playerSize
-    );
   }
 
   // Player direction changing
@@ -181,12 +173,9 @@ class snakeTheUltimateChallenge {
       if (timestamp - lastTime >= this.speed) {
         this.clearCanvas();
         this.playerMove();
-        this.drawPlayer();
         this.whenEatOrNot();
-
-        console.log(this.playerPosition);
+        this.drawPlayer();
         
-
         this.directionLock = true;
         lastTime = timestamp;
       }
@@ -204,12 +193,15 @@ class snakeTheUltimateChallenge {
   // Player draw
   drawPlayer() {
     this.ctx.fillStyle = this.playerColor;
-    this.ctx.fillRect(
-      this.playerPosition[0].x,
-      this.playerPosition[0].y,
-      this.playerSize,
-      this.playerSize
-    );
+
+    for (let i = 0; i < this.playerPosition.length; i++) {
+      this.ctx.fillRect(
+        this.playerPosition[i].x,
+        this.playerPosition[i].y,
+        this.playerSize,
+        this.playerSize
+      );
+    }
   }
 
   // Random meal generation
@@ -230,7 +222,7 @@ class snakeTheUltimateChallenge {
     ) {
       this.randomFoodGeneration();
     } else {
-      this.playerPosition.shift();
+      this.playerPosition.pop();
     }
 
     this.drawFood();
@@ -243,10 +235,12 @@ class snakeTheUltimateChallenge {
   }
 
   playerMove() {
-    gg.x += this.directionX;
-    gg.y += this.directionY;
+    let newObj = {
+      x: this.playerPosition[0].x + this.directionX,
+      y: this.playerPosition[0].y + this.directionY,
+    };
 
-    this.playerPosition.push(gg);
+    this.playerPosition.unshift({ x: newObj.x, y: newObj.y });
   }
 }
 
