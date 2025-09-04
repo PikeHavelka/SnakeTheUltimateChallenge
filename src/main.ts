@@ -128,13 +128,13 @@ class snakeTheUltimateChallenge {
     }
   }
 
-  // Always show player in the center of the square. Minus player size for better starting
+  // Always show player in the center of the square. Minus player size for better starting.
   playerStartPosition() {
     this.playerPosition[0].x = (this.canvasWidth / 2 - this.playerSize / 2) - this.playerSize;
     this.playerPosition[0].y = this.canvasHeight / 2 - this.playerSize / 2;
   }
 
-  // Player direction changing
+  // Player direction, wasd and arrows keybinds.
   playerDirection(key: string) {
     if (moves.up.includes(key) && !moves.down.includes(this.lastKey)) {
       this.directionY = -this.playerSize;
@@ -165,6 +165,66 @@ class snakeTheUltimateChallenge {
     }
   }
 
+  // Just clearing whole Canvas.
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+  }
+
+  // Draw head of the Snake and whole body.
+  drawPlayer() {
+    this.ctx.fillStyle = this.playerColor;
+
+    for (let i = 0; i < this.playerPosition.length; i++) {
+      this.ctx.fillRect(
+        this.playerPosition[i].x,
+        this.playerPosition[i].y,
+        this.playerSize,
+        this.playerSize
+      );
+    }
+  }
+
+  // Food generation in whole square.
+  randomFoodGeneration() {
+    this.foodX =
+      Math.floor(Math.random() * (this.canvasWidth / this.playerSize)) *
+      this.playerSize;
+
+    this.foodY =
+      Math.floor(Math.random() * (this.canvasHeight / this.playerSize)) *
+      this.playerSize;
+  }
+
+  // What will happen, when you eat a food or not.
+  whenEatOrNot() {
+    if (
+      this.playerPosition[0].x === this.foodX &&
+      this.playerPosition[0].y === this.foodY
+    ) {
+      this.randomFoodGeneration();
+    } else {
+      this.playerPosition.pop();
+    }
+
+    this.drawFood();
+  }
+
+  // Just draw food.
+  drawFood() {
+    this.ctx.fillStyle = this.foodColor;
+    this.ctx.fillRect(this.foodX, this.foodY, this.playerSize, this.playerSize);
+  }
+
+  // Creating body of the snake.
+  playerMove() {
+    let snakeBody = {
+      x: this.playerPosition[0].x + this.directionX,
+      y: this.playerPosition[0].y + this.directionY,
+    };
+
+    this.playerPosition.unshift({ x: snakeBody.x, y: snakeBody.y });
+  }
+
   // Game loop
   gameLoop() {
     let lastTime = 0;
@@ -183,64 +243,6 @@ class snakeTheUltimateChallenge {
     };
 
     requestAnimationFrame(snakeGameLoop);
-  }
-
-  // Clearing playing pool
-  clearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-  }
-
-  // Player draw
-  drawPlayer() {
-    this.ctx.fillStyle = this.playerColor;
-
-    for (let i = 0; i < this.playerPosition.length; i++) {
-      this.ctx.fillRect(
-        this.playerPosition[i].x,
-        this.playerPosition[i].y,
-        this.playerSize,
-        this.playerSize
-      );
-    }
-  }
-
-  // Random meal generation
-  randomFoodGeneration() {
-    this.foodX =
-      Math.floor(Math.random() * (this.canvasWidth / this.playerSize)) *
-      this.playerSize;
-
-    this.foodY =
-      Math.floor(Math.random() * (this.canvasHeight / this.playerSize)) *
-      this.playerSize;
-  }
-
-  whenEatOrNot() {
-    if (
-      this.playerPosition[0].x === this.foodX &&
-      this.playerPosition[0].y === this.foodY
-    ) {
-      this.randomFoodGeneration();
-    } else {
-      this.playerPosition.pop();
-    }
-
-    this.drawFood();
-  }
-
-  // Meal draw
-  drawFood() {
-    this.ctx.fillStyle = this.foodColor;
-    this.ctx.fillRect(this.foodX, this.foodY, this.playerSize, this.playerSize);
-  }
-
-  playerMove() {
-    let newObj = {
-      x: this.playerPosition[0].x + this.directionX,
-      y: this.playerPosition[0].y + this.directionY,
-    };
-
-    this.playerPosition.unshift({ x: newObj.x, y: newObj.y });
   }
 }
 
