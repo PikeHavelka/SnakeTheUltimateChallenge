@@ -11,7 +11,7 @@ import type { GameConfig } from "./types";
 menuBgMusic();
 hoverSoundEffect();
 
-//todo - kolize s tělem hada, kolize s krajem pole, generování jídla v hřáci, skóre
+//todo - kolize s tělem hada, generování jídla v hřáci, skóre
 // přidat na spustění intervalu opoždění o 3-4vteřiny
 // pageTransition();
 // countDown();
@@ -38,7 +38,7 @@ const config = {
   foodY: 0,
   animationFrameID: 0,
   lastTime: 0,
-  isGameOver: false
+  isGameOver: false,
 };
 
 const moves = {
@@ -236,14 +236,33 @@ class snakeTheUltimateChallenge {
     this.playerHead.unshift({ x: snakeBody.x, y: snakeBody.y });
   }
 
+  // Literally stop the game
   stopGame() {
     this.isGameOver = true;
     cancelAnimationFrame(this.animationFrameID);
   }
 
+  // End the game if you touch the wall
   wallCollision() {
-    if(this.playerHead[0].x === this.canvasWidth || this.playerHead[0].y === this.canvasHeight || this.playerHead[0].x < 0 || this.playerHead[0].y < 0 ) {
-      this.stopGame()
+    if (
+      this.playerHead[0].x === this.canvasWidth ||
+      this.playerHead[0].y === this.canvasHeight ||
+      this.playerHead[0].x < 0 ||
+      this.playerHead[0].y < 0
+    ) {
+      this.stopGame();
+    }
+  }
+
+  // End of the game if you touch the snake
+  snakeBodyCollision() {
+    for (let i = 1; i < this.playerHead.length; i++) {
+      if (
+        this.playerHead[0].x === this.playerHead[i].x &&
+        this.playerHead[0].y === this.playerHead[i].y
+      ) {
+        this.stopGame();
+      }
     }
   }
 
@@ -255,13 +274,15 @@ class snakeTheUltimateChallenge {
         this.playerMove();
         this.whenEatOrNot();
         this.drawPlayer();
+
         this.wallCollision();
-        console.log(this.isGameOver);
-        
+        this.snakeBodyCollision();
+
         this.directionLock = true;
         this.lastTime = timestamp;
       }
-      if(!this.isGameOver) this.animationFrameID = requestAnimationFrame(snakeGameLoop);
+      if (!this.isGameOver)
+        this.animationFrameID = requestAnimationFrame(snakeGameLoop);
     };
     this.animationFrameID = requestAnimationFrame(snakeGameLoop);
   }
