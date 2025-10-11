@@ -6,19 +6,20 @@ import {
   pageTransition,
   countDown,
 } from "./MainMenu/index";
-import type { GameConfig } from "./types";
+import type { GameConfig1 } from "./types";
+import { Game } from "./game/Game";
 
 menuBgMusic();
 hoverSoundEffect();
 
-//todo - kolize s tělem hada, generování jídla v hřáci, skóre
+//todo - generování jídla v hřáci, skóre
 // přidat na spustění intervalu opoždění o 3-4vteřiny
 // pageTransition();
 // countDown();
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
-const config = {
+const config1 = {
   ctx: canvas.getContext("2d") as CanvasRenderingContext2D,
   canvasWidth: (canvas.width = 300), // v menu nastavit aby šli vybrat pouze lichá čísla
   canvasHeight: (canvas.height = 300), // v menu nastavit aby šli vybrat pouze lichá čísla
@@ -70,27 +71,27 @@ class snakeTheUltimateChallenge {
   lastTime: number;
   isGameOver: boolean;
 
-  constructor(config: GameConfig) {
-    (this.ctx = config.ctx),
-      (this.canvasWidth = config.canvasWidth),
-      (this.canvasHeight = config.canvasHeight),
-      (this.playerSize = config.playerSize),
-      (this.playerColor = config.playerColor),
-      (this.playerName = config.playerName),
-      (this.gameSpeed = config.gameSpeed),
-      (this.showGrid = config.showGrid),
-      (this.playerHead = config.playerHead),
-      (this.speed = config.speed),
-      (this.directionX = config.directionX),
-      (this.directionY = config.directionY),
-      (this.lastKey = config.lastKey);
-    this.directionLock = config.directionLock;
-    this.foodColor = config.foodColor;
-    this.foodX = config.foodX;
-    this.foodY = config.foodY;
-    this.animationFrameID = config.animationFrameID;
-    this.lastTime = config.lastTime;
-    this.isGameOver = config.isGameOver;
+  constructor(config1: GameConfig1) {
+    (this.ctx = config1.ctx),
+      (this.canvasWidth = config1.canvasWidth),
+      (this.canvasHeight = config1.canvasHeight),
+      (this.playerSize = config1.playerSize),
+      (this.playerColor = config1.playerColor),
+      (this.playerName = config1.playerName),
+      (this.gameSpeed = config1.gameSpeed),
+      (this.showGrid = config1.showGrid),
+      (this.playerHead = config1.playerHead),
+      (this.speed = config1.speed),
+      (this.directionX = config1.directionX),
+      (this.directionY = config1.directionY),
+      (this.lastKey = config1.lastKey);
+    this.directionLock = config1.directionLock;
+    this.foodColor = config1.foodColor;
+    this.foodX = config1.foodX;
+    this.foodY = config1.foodY;
+    this.animationFrameID = config1.animationFrameID;
+    this.lastTime = config1.lastTime;
+    this.isGameOver = config1.isGameOver;
   }
 
   // Event Listeners
@@ -197,13 +198,33 @@ class snakeTheUltimateChallenge {
 
   // Food generation in whole square.
   randomFoodGeneration() {
-    this.foodX =
-      Math.floor(Math.random() * (this.canvasWidth / this.playerSize)) *
-      this.playerSize;
+    let xFood: number;
+    let yFood: number;
+    let foodCollision = false;
 
-    this.foodY =
-      Math.floor(Math.random() * (this.canvasHeight / this.playerSize)) *
-      this.playerSize;
+    do {
+      foodCollision = false;
+
+      xFood =
+        Math.floor(Math.random() * (this.canvasWidth / this.playerSize)) *
+        this.playerSize;
+
+      yFood =
+        Math.floor(Math.random() * (this.canvasHeight / this.playerSize)) *
+        this.playerSize;
+
+      for (let i = 0; i < this.playerHead.length; i++) {
+        if (this.playerHead[i].x === xFood && this.playerHead[i].y === yFood) {
+          foodCollision = true;
+          break; // If you find first collision => end cyklus
+        }
+      }
+
+      if (!foodCollision) {
+        this.foodX = xFood;
+        this.foodY = yFood;
+      }
+    } while (foodCollision);
   }
 
   // What will happen, when you eat a food or not.
@@ -275,6 +296,7 @@ class snakeTheUltimateChallenge {
         this.whenEatOrNot();
         this.drawPlayer();
 
+        // Collisions
         this.wallCollision();
         this.snakeBodyCollision();
 
@@ -288,7 +310,7 @@ class snakeTheUltimateChallenge {
   }
 }
 
-const snakeGame = new snakeTheUltimateChallenge(config);
+const snakeGame = new snakeTheUltimateChallenge(config1);
 snakeGame.initControls();
 snakeGame.playerStartPosition();
 snakeGame.randomFoodGeneration();

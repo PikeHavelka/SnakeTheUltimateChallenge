@@ -1,4 +1,4 @@
-export type GameConfig = {
+export type GameConfig1 = {
   ctx: CanvasRenderingContext2D;
   canvasWidth: number;
   canvasHeight: number;
@@ -7,7 +7,7 @@ export type GameConfig = {
   playerName: string;
   gameSpeed: number;
   showGrid: boolean;
-  playerHead: {x: number, y: number}[];
+  playerHead: { x: number; y: number }[];
   speed: number;
   directionX: number;
   directionY: number;
@@ -19,4 +19,9 @@ export type GameConfig = {
   animationFrameID: number;
   lastTime: number;
   isGameOver: boolean;
+};
+
+export type GameConfig = {
+  playerSize: number;
+  playerColor: string;
 };
