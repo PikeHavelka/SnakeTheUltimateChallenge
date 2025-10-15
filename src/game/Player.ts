@@ -50,6 +50,12 @@ export class Player {
     this.snakeBody = [{ x: this.headPositionX, y: this.headPositionY }];
   }
 
+  hitWall(canvasWidth: number, canvasHeight: number) {
+    const head = this.snakeBody[0];
+
+    if(head.x > canvasWidth || head.x < 0 || head.y > canvasHeight || head.y < 0) return true;
+  }
+
   move() {
     this.snakeBody[0].x += this.directionX;
     this.snakeBody[0].y += this.directionY;
