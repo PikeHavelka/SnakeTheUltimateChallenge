@@ -56,39 +56,26 @@ export class Player {
   }
 
   direction(key: string) {
-    switch (key) {
-      case "w":
-        if (this.lastKey != "down" && !this.directionLocket) {
-          this.directionX = 0;
-          this.directionY = -this.size;
-          this.lastKey = key;
-          this.directionLocket = true;
-        }
-        break;
-      case "a":
-        if (this.lastKey != "right" && !this.directionLocket) {
-          this.directionX = -this.size;
-          this.directionY = 0;
-          this.lastKey = key;
-          this.directionLocket = true;
-        }
-        break;
-      case "s":
-        if (this.lastKey != "up" && !this.directionLocket) {
-          this.directionX = 0;
-          this.directionY = this.size;
-          this.lastKey = key;
-          this.directionLocket = true;
-        }
-        break;
-      case "d":
-        if (this.lastKey != "left" && !this.directionLocket) {
-          this.directionX = this.size;
-          this.directionY = 0;
-          this.lastKey = key;
-          this.directionLocket = true;
-        }
-        break;
+    if (key === "w" && this.lastKey != "s" && !this.directionLocket) {
+      this.directionX = 0;
+      this.directionY = -this.size;
+      this.directionLocket = true;
+      this.lastKey = key;
+    } else if (key === "a" && this.lastKey != "d" && !this.directionLocket) {
+      this.directionX = -this.size;
+      this.directionY = 0;
+      this.directionLocket = true;
+      this.lastKey = key;
+    } else if (key === "s" && this.lastKey != "w" && !this.directionLocket) {
+      this.directionX = 0;
+      this.directionY = this.size;
+      this.directionLocket = true;
+      this.lastKey = key;
+    } else if (key === "d" && this.lastKey != "a" && !this.directionLocket) {
+      this.directionX = this.size;
+      this.directionY = 0;
+      this.directionLocket = true;
+      this.lastKey = key;
     }
   }
 }
