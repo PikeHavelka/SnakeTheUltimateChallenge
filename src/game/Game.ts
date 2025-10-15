@@ -1,5 +1,3 @@
-"use strict";
-import "../style.css";
 import { Food, Player, Canvas } from "./index";
 
 export class Game {
@@ -7,41 +5,21 @@ export class Game {
   canvas: Canvas;
   player: Player;
 
-  width: number;
-  height: number;
-
-  private animationID: number;
+  animationID: number;
 
   constructor(width: number, height: number) {
     this.player = new Player(width, height);
     this.canvas = new Canvas(width, height, this.player);
-    
-    this.width = width;
-    this.height = height;
 
     this.animationID = 0;
   }
 
   listeners() {
-    const keyMap: Record<string, () => void> = {
-      // Player moves
-      w: () => this.player.direction("up"),
-      ArrowUp: () => this.player.direction("up"),
-      a: () => this.player.direction("left"),
-      ArrowLeft: () => this.player.direction("left"),
-      s: () => this.player.direction("down"),
-      ArrowDown: () => this.player.direction("down"),
-      d: () => this.player.direction("right"),
-      ArrowRight: () => this.player.direction("right"),
-
-      // Menu
-      // Grid
-      // Pause
-    };
-
     document.addEventListener("keydown", (e) => {
-      const action = keyMap[e.key];
-      if (action) action();
+      const key = e.key;
+
+      //Player interactions
+      if(["w", "a", "s", "d", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"].includes(key)) this.player.direction(key);
     });
   }
 
@@ -50,7 +28,7 @@ export class Game {
   }
   
   loop() {
-    game.listeners();
+    this.listeners();
     let interval = 200;
     let lastTime = 0;
 
@@ -72,6 +50,3 @@ export class Game {
     this.animationID = requestAnimationFrame(gameLoop);
   }
 }
-
-const game = new Game(300, 300);
-game.loop();

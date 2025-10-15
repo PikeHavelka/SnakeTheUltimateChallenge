@@ -6,39 +6,28 @@ export class Player {
   headPositionX: number;
   headPositionY: number;
 
-  playerSize: number;
-  playerColor: string;
-
-  width: number;
-  height: number;
-
   directionX: number;
   directionY: number;
   directionLocket: boolean;
 
   lastKey: string;
 
-  constructor(width: number, height: number) {
+  constructor(canvasWidth: number, canvasHeight: number) {
     this.color = "green";
     this.size = 20;
 
     this.lastKey = "right";
 
-    this.width = width;
-    this.height = height;
-
     this.directionX = 20; // Po spuštění hry had okamžitě beží.
     this.directionY = 0;
     this.directionLocket = false;
 
-    this.playerSize = 20;
-    this.playerColor = "green";
+    this.snakeBody = [];
+    this.headPositionX = 0;
+    this.headPositionY = 0;
 
-    // Počáteční pozice hada, střed hracího pole.
-    this.headPositionX = this.width / 2 - this.size / 2;
-    this.headPositionY = this.height / 2 - this.size / 2;
-
-    this.snakeBody = [{ x: this.headPositionX, y: this.headPositionY }];
+    // // Počáteční pozice hada, střed hracího pole.
+    this.resetPosition(canvasWidth, canvasHeight);
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -54,9 +43,9 @@ export class Player {
     }
   }
 
-  resetPosition() {
-    this.headPositionX = this.width / 2 - this.size / 2;
-    this.headPositionY = this.height / 2 - this.size / 2;
+  resetPosition(canvasWidth: number, canvasHeight: number) {
+    this.headPositionX = canvasWidth / 2 - this.size / 2;
+    this.headPositionY = canvasHeight / 2 - this.size / 2;
 
     this.snakeBody = [{ x: this.headPositionX, y: this.headPositionY }];
   }
@@ -68,7 +57,7 @@ export class Player {
 
   direction(key: string) {
     switch (key) {
-      case "up":
+      case "w":
         if (this.lastKey != "down" && !this.directionLocket) {
           this.directionX = 0;
           this.directionY = -this.size;
@@ -76,7 +65,7 @@ export class Player {
           this.directionLocket = true;
         }
         break;
-      case "left":
+      case "a":
         if (this.lastKey != "right" && !this.directionLocket) {
           this.directionX = -this.size;
           this.directionY = 0;
@@ -84,7 +73,7 @@ export class Player {
           this.directionLocket = true;
         }
         break;
-      case "down":
+      case "s":
         if (this.lastKey != "up" && !this.directionLocket) {
           this.directionX = 0;
           this.directionY = this.size;
@@ -92,7 +81,7 @@ export class Player {
           this.directionLocket = true;
         }
         break;
-      case "right":
+      case "d":
         if (this.lastKey != "left" && !this.directionLocket) {
           this.directionX = this.size;
           this.directionY = 0;
