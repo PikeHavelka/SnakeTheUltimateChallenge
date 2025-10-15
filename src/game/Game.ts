@@ -10,6 +10,7 @@ export class Game {
   constructor(width: number, height: number) {
     this.player = new Player(width, height);
     this.canvas = new Canvas(width, height, this.player);
+    this.food = new Food(width, height);
 
     this.animationID = 0;
   }
@@ -44,7 +45,7 @@ export class Game {
         
         this.canvas.draw();
         this.collisions();
-        
+
         this.player.directionLocket = false;
         lastTime = timestamp;
       }
