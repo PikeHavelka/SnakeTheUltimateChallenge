@@ -16,7 +16,7 @@ export class Player {
     this.color = "green";
     this.size = 20;
 
-    this.lastKey = "right";
+    this.lastKey = "d";
 
     this.directionX = 20; // Po spuštění hry had okamžitě beží.
     this.directionY = 0;
