@@ -26,6 +26,10 @@ export class Game {
   stop(){
     cancelAnimationFrame(this.animationID);
   }
+
+  collisions(){
+    if(this.player.hitWall(this.canvas.canvasWidth, this.canvas.canvasHeight)) this.stop();
+  }
   
   loop() {
     this.listeners();
@@ -39,6 +43,7 @@ export class Game {
         this.player.move();
         
         this.canvas.draw();
+        this.collisions();
         
         this.player.directionLocket = false;
         lastTime = timestamp;
