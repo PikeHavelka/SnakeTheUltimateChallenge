@@ -4,8 +4,8 @@ export class Canvas {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
 
-  canvasWidth: number;
-  canvasHeight: number;
+  width: number;
+  height: number;
 
   player: Player;
 
@@ -23,14 +23,14 @@ export class Canvas {
     this.canvas = canvas;
     this.ctx = ctx;
 
-    this.canvasWidth = this.canvas.width = width;
-    this.canvasHeight = this.canvas.height = height;
+    this.width = this.canvas.width = width;
+    this.height = this.canvas.height = height;
 
     this.player = player;
   }
 
   clear() {
-    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    this.ctx.clearRect(0, 0, this.width, this.height);
   }
 
   draw() {

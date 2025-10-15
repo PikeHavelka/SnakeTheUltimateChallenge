@@ -28,7 +28,7 @@ export class Game {
   }
 
   collisions(){
-    if(this.player.hitWall(this.canvas.canvasWidth, this.canvas.canvasHeight)) this.stop();
+    if(this.player.hitWall(this.canvas.width, this.canvas.height)) this.stop();
   }
   
   loop() {
