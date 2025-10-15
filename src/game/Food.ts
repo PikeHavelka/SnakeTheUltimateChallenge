@@ -16,7 +16,7 @@ export class Food {
     this.size = 20;
 
     this.cellsX = canvasWidth / this.size;
-    this. cellsY = canvasHeight / this.size;
+    this.cellsY = canvasHeight / this.size;
 
     this.randomGeneration();
   }

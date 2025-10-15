@@ -1,4 +1,4 @@
-import { Player } from "./Player";
+import { Player, Food } from "./index";
 
 export class Canvas {
   canvas: HTMLCanvasElement;
@@ -8,8 +8,9 @@ export class Canvas {
   height: number;
 
   player: Player;
+  food: Food;
 
-  constructor(width: number, height: number, player: Player) {
+  constructor(width: number, height: number, player: Player, food: Food) {
     const canvas = document.getElementById(
       "canvas"
     ) as HTMLCanvasElement | null;
@@ -27,6 +28,7 @@ export class Canvas {
     this.height = this.canvas.height = height;
 
     this.player = player;
+    this.food = food;
   }
 
   clear() {
@@ -34,6 +36,7 @@ export class Canvas {
   }
 
   draw() {
+    this.food.draw(this.ctx);
     this.player.draw(this.ctx);
   }
 }

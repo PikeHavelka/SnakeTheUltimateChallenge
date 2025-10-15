@@ -1,16 +1,16 @@
 import { Food, Player, Canvas } from "./index";
 
 export class Game {
-  food: Food | null = null;
+  food: Food;
   canvas: Canvas;
   player: Player;
 
   animationID: number;
 
   constructor(width: number, height: number) {
-    this.player = new Player(width, height);
-    this.canvas = new Canvas(width, height, this.player);
     this.food = new Food(width, height);
+    this.player = new Player(width, height);
+    this.canvas = new Canvas(width, height, this.player, this.food);
 
     this.animationID = 0;
   }
@@ -30,6 +30,8 @@ export class Game {
 
   collisions(){
     if(this.player.hitWall(this.canvas.width, this.canvas.height)) this.stop();
+
+    if(this.player.snakeBody[0].x === this.food.x && this.player.snakeBody[0].y === this.food.y) this.food.randomGeneration();
   }
   
   loop() {
@@ -44,6 +46,7 @@ export class Game {
         this.player.move();
         
         this.canvas.draw();
+
         this.collisions();
 
         this.player.directionLocket = false;
