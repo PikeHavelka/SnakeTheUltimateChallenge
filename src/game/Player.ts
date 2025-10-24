@@ -2,7 +2,7 @@ export class Player {
   color: string;
   size: number;
 
-  snakeBody: Record<string, number>[];
+  snake: [Record<string, number>];
   headPositionX: number;
   headPositionY: number;
 
@@ -22,7 +22,7 @@ export class Player {
     this.directionY = 0;
     this.directionLocket = false;
 
-    this.snakeBody = [];
+    this.snake = [{}];
     this.headPositionX = 0;
     this.headPositionY = 0;
 
@@ -33,10 +33,10 @@ export class Player {
   draw(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = this.color;
 
-    for (let i = 0; i < this.snakeBody.length; i++) {
+    for (let i = 0; i < this.snake.length; i++) {
       ctx.fillRect(
-        this.snakeBody[i].x,
-        this.snakeBody[i].y,
+        this.snake[i].x,
+        this.snake[i].y,
         this.size,
         this.size
       );
@@ -47,18 +47,22 @@ export class Player {
     this.headPositionX = canvasWidth / 2 - this.size / 2;
     this.headPositionY = canvasHeight / 2 - this.size / 2;
 
-    this.snakeBody = [{ x: this.headPositionX, y: this.headPositionY }];
+    this.snake = [{ x: this.headPositionX, y: this.headPositionY }];
   }
 
   hitWall(canvasWidth: number, canvasHeight: number) {
-    const head = this.snakeBody[0];
+    const head = this.snake[0];
 
     if(head.x > canvasWidth || head.x < 0 || head.y > canvasHeight || head.y < 0) return true;
   }
 
   move() {
-    this.snakeBody[0].x += this.directionX;
-    this.snakeBody[0].y += this.directionY;
+    const head = {
+      x: this.headPositionX += this.directionX,
+      y: this.headPositionY += this.directionY
+    }
+
+    this.snake.unshift(head);
   }
 
   direction(key: string) {

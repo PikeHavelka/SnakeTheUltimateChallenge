@@ -42,7 +42,8 @@ export class Game {
   collisions(){
     if(this.player.hitWall(this.canvas.width, this.canvas.height)) this.stop();
 
-    if(this.player.snakeBody[0].x === this.food.x && this.player.snakeBody[0].y === this.food.y) this.food.randomGeneration();
+    if(this.player.snake[0].x === this.food.x && this.player.snake[0].y === this.food.y) this.food.randomGeneration();
+    else this.player.snake.pop();
   }
   
   loop() {
@@ -55,10 +56,9 @@ export class Game {
         this.canvas.clear();
         
         this.player.move();
-        
-        this.canvas.draw();
-
         this.collisions();
+
+        this.canvas.draw();
 
         this.player.directionLocket = false;
         lastTime = timestamp;
