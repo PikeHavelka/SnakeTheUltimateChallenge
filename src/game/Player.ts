@@ -16,7 +16,7 @@ export class Player {
     this.color = "green";
     this.size = 20;
 
-    this.lastKey = "d";
+    this.lastKey = "right";
 
     this.directionX = 20; // Po spuštění hry had okamžitě beží.
     this.directionY = 0;
@@ -62,22 +62,22 @@ export class Player {
   }
 
   direction(key: string) {
-    if (key === "w" && this.lastKey != "s" && !this.directionLocket) {
+    if (key === "up"  && this.lastKey !== "down" && !this.directionLocket) {
       this.directionX = 0;
       this.directionY = -this.size;
       this.directionLocket = true;
       this.lastKey = key;
-    } else if (key === "a" && this.lastKey != "d" && !this.directionLocket) {
+    } else if (key === "left" && this.lastKey !== "right" && !this.directionLocket) {
       this.directionX = -this.size;
       this.directionY = 0;
       this.directionLocket = true;
       this.lastKey = key;
-    } else if (key === "s" && this.lastKey != "w" && !this.directionLocket) {
+    } else if (key === "down" && this.lastKey !== "up" && !this.directionLocket) {
       this.directionX = 0;
       this.directionY = this.size;
       this.directionLocket = true;
       this.lastKey = key;
-    } else if (key === "d" && this.lastKey != "a" && !this.directionLocket) {
+    } else if (key === "right" && this.lastKey !== "left" && !this.directionLocket) {
       this.directionX = this.size;
       this.directionY = 0;
       this.directionLocket = true;

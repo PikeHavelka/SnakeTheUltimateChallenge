@@ -16,11 +16,22 @@ export class Game {
   }
 
   listeners() {
+    const keyMap: Record<string, () => void> = {
+      "w": () => this.player.direction("up"),
+      "d": () => this.player.direction("right"),
+      "s": () => this.player.direction("down"),
+      "a": () => this.player.direction("left"),
+
+      "ArrowUp": () => this.player.direction("up"),
+      "ArrowRight": () => this.player.direction("right"),
+      "ArrowDown": () => this.player.direction("down"),
+      "ArrowLeft": () => this.player.direction("left")
+    }
+
     document.addEventListener("keydown", (e) => {
       const key = e.key;
 
-      //Player interactions
-      if(["w", "a", "s", "d", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"].includes(key)) this.player.direction(key);
+      if(keyMap[key]) keyMap[key]();
     });
   }
 
