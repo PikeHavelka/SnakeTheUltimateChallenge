@@ -17,35 +17,50 @@ export class Game {
 
   listeners() {
     const keyMap: Record<string, () => void> = {
-      "w": () => this.player.direction("up"),
-      "d": () => this.player.direction("right"),
-      "s": () => this.player.direction("down"),
-      "a": () => this.player.direction("left"),
+      w: () => this.player.direction("up"),
+      d: () => this.player.direction("right"),
+      s: () => this.player.direction("down"),
+      a: () => this.player.direction("left"),
 
-      "ArrowUp": () => this.player.direction("up"),
-      "ArrowRight": () => this.player.direction("right"),
-      "ArrowDown": () => this.player.direction("down"),
-      "ArrowLeft": () => this.player.direction("left")
-    }
+      ArrowUp: () => this.player.direction("up"),
+      ArrowRight: () => this.player.direction("right"),
+      ArrowDown: () => this.player.direction("down"),
+      ArrowLeft: () => this.player.direction("left"),
+    };
 
     document.addEventListener("keydown", (e) => {
       const key = e.key;
 
-      if(keyMap[key]) keyMap[key]();
+      if (keyMap[key]) keyMap[key]();
     });
   }
 
-  stop(){
+  stop() {
     cancelAnimationFrame(this.animationID);
   }
 
-  collisions(){
-    if(this.player.hitWall(this.canvas.width, this.canvas.height)) this.stop();
+  collisions() {
+    if (this.player.hitWall(this.canvas.width, this.canvas.height)) this.stop();
 
-    if(this.player.snake[0].x === this.food.x && this.player.snake[0].y === this.food.y) this.food.randomGeneration();
+    if (
+      this.player.snake[0].x === this.food.x &&
+      this.player.snake[0].y === this.food.y
+    )
+      this.food.randomGeneration();
     else this.player.snake.pop();
+
+    if(this.player.snake.length > 4) {
+      for (let i = 1; i < this.player.snake.length; i++) {
+        if (
+          this.player.headPositionX === this.player.snake[i].x &&
+          this.player.headPositionY === this.player.snake[i].y
+        ) {
+          this.stop();
+        }
+      }
+    }
   }
-  
+
   loop() {
     this.listeners();
     let interval = 200;
@@ -54,7 +69,7 @@ export class Game {
     const gameLoop = (timestamp: number) => {
       if (timestamp - lastTime >= interval) {
         this.canvas.clear();
-        
+
         this.player.move();
         this.collisions();
 
@@ -63,10 +78,10 @@ export class Game {
         this.player.directionLocket = false;
         lastTime = timestamp;
       }
-      
+
       this.animationID = requestAnimationFrame(gameLoop);
     };
-    
+
     this.animationID = requestAnimationFrame(gameLoop);
   }
 }
