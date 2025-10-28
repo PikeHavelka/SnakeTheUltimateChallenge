@@ -40,16 +40,33 @@ export class Game {
   }
 
   collisions() {
+    // If head of the snake hit a wall, stop the game.
     if (this.player.hitWall(this.canvas.width, this.canvas.height)) this.stop();
 
+    // If snake eat food, grow. If not, cut a tail.
     if (
       this.player.snake[0].x === this.food.x &&
       this.player.snake[0].y === this.food.y
-    )
-      this.food.randomGeneration();
-    else this.player.snake.pop();
+    ) {
+      let isCollision = true;
+      let i = 0;
 
-    if(this.player.snake.length > 4) {
+      while (isCollision) {
+        if(i === 0) this.food.randomGeneration();
+
+        if (
+          this.player.snake[i].x === this.food.x &&
+          this.player.snake[i].y === this.food.y
+        ) {
+          i = 0;
+        } else i++;
+
+        if (i >= this.player.snake.length) isCollision = false;
+      }
+    } else this.player.snake.pop();
+
+    // Head collision with the snake body.
+    if (this.player.snake.length > 4) {
       for (let i = 1; i < this.player.snake.length; i++) {
         if (
           this.player.headPositionX === this.player.snake[i].x &&
