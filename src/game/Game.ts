@@ -6,6 +6,7 @@ export class Game {
   player: Player;
 
   animationID: number;
+  isLoopWorking: boolean;
 
   constructor(width: number, height: number) {
     this.food = new Food(width, height);
@@ -13,6 +14,7 @@ export class Game {
     this.canvas = new Canvas(width, height, this.player, this.food);
 
     this.animationID = 0;
+    this.isLoopWorking = true;
   }
 
   listeners() {
@@ -37,6 +39,7 @@ export class Game {
 
   stop() {
     cancelAnimationFrame(this.animationID);
+    this.isLoopWorking = false;
   }
 
   collisions() {
@@ -96,7 +99,7 @@ export class Game {
         lastTime = timestamp;
       }
 
-      this.animationID = requestAnimationFrame(gameLoop);
+      if (this.isLoopWorking) this.animationID = requestAnimationFrame(gameLoop);
     };
 
     this.animationID = requestAnimationFrame(gameLoop);
